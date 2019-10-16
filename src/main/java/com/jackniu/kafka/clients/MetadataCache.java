@@ -94,6 +94,7 @@ public class MetadataCache  {
     }
 
     private void computeClusterView() {
+        System.out.println("MetadataCache 类是做什么的");
         List<PartitionInfo> partitionInfos = metadataByPartition.values()
                 .stream()
                 .map(PartitionInfoAndEpoch::partitionInfo)
