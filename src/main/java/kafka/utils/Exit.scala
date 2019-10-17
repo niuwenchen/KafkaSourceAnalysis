@@ -1,0 +1,30 @@
+package kafka.utils
+
+import  com.jackniu.kafka.common.utils.{Exit => JExit}
+object Exit {
+  def exit(statusCode:Int,message:Option[String] = None) :Nothing ={
+    JExit.exit(statusCode,message.orNull)
+    throw new AssertionError("exit should not return, but it did.")
+  }
+  def halt(statusCode: Int, message: Option[String] = None): Nothing = {
+    JExit.halt(statusCode, message.orNull)
+    throw new AssertionError("halt should not return, but it did.")
+  }
+
+  def setExitProcedure(exitProcedure: (Int, Option[String]) => Nothing): Unit =
+    JExit.setExitProcedure(functionToProcedure(exitProcedure))
+
+  def setHaltProcedure(haltProcedure: (Int, Option[String]) => Nothing): Unit =
+    JExit.setHaltProcedure(functionToProcedure(haltProcedure))
+
+  def resetExitProcedure(): Unit =
+    JExit.resetExitProcedure()
+
+  def resetHaltProcedure(): Unit =
+    JExit.resetHaltProcedure()
+
+  private def functionToProcedure(procedure: (Int, Option[String]) => Nothing) = new JExit.Procedure {
+    def execute(statusCode: Int, message: String): Unit = procedure(statusCode, Option(message))
+  }
+
+}
